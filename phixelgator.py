@@ -53,7 +53,8 @@ def average_pixel(data, mode='rgb'):
     if 'rgb' == mode:
         return list(map(lambda x: int(round(sum(x) / len(data))), list(zip(*data))[:3]))
     else:
-        return list(map(lambda x: sum(x) / len(list(data)), list(zip(*data))[:3]))
+        map_size = len(list(zip(*data))[:3])
+        return list(map(lambda x: sum(x) / map_size, list(zip(*data))[:3]))
 
 
 def get_closest_color(color, palette, hexdict, mode='rgb'):
