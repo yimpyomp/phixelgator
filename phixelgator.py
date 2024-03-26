@@ -3,6 +3,8 @@ from __future__ import division
 import sys, argparse, math, json, os, colorsys
 from PIL import Image
 
+
+# TODO: Still does not work when using hls or hsv. How to fix? I do not know
 """ These convert from decimal back to 0-255 mode """
 
 
@@ -77,6 +79,9 @@ def phixelate(img, palette, blockSize, mode='rgb'):
     """Takes a PIL image object, a palette, and a block-size and alters colors in-place. no return val."""
     width, height = img.size
     rgb = img.load()
+    if mode == 'HSV':
+        thing = img.convert('HSV').load()
+        print(type(thing))
     blockWidth = int(math.ceil(width / blockSize))
     blockHeight = int(math.ceil(height / blockSize))
     hexdict = {}  # store "closest" colors to avoid repeat computations.
@@ -105,9 +110,10 @@ def phixelate(img, palette, blockSize, mode='rgb'):
             if 'hls' == mode:
                 container = map(lambda co: rgb_to_hls(*(co[:3])), container)
 
-            # Convert a block to one color -- take the average, and find closest palette color
+            # Convert a block to one color -- take the average, and find the closest palette color
             color = average_pixel(container, mode)
-            if palette: color = get_closest_color(color, palette, hexdict, mode)
+            if palette:
+                color = get_closest_color(color, palette, hexdict, mode)
 
             # Convert back to rgb if we're in hsv or hls mode
             if 'hsv' == mode:
